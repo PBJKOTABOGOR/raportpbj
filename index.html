@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rapor PBJ - Dashboard</title>
+  <link rel="icon" href="favicon-v2.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32-v2.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon-v2.png">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <style>
+    :root{
+      --bg:#eef4fb;
+      --card:#ffffff;
+      --text:#122033;
+      --muted:#64748b;
+      --line:#dbe5f0;
+      --navy:#123a72;
+      --navy2:#245a9b;
+      --teal:#0f766e;
+      --danger:#b91c1c;
+      --warning:#9a6100;
+      --shadow-lg:0 16px 40px rgba(15,23,42,.10);
+      --shadow-sm:0 4px 14px rgba(15,23,42,.06);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:"Inter","Segoe UI",Arial,sans-serif;
+      background:linear-gradient(180deg,#f8fbff 0%,#eef4fb 100%);
+      color:var(--text);
+    }
+
+    .wrap{
+      max-width:1400px;
+      margin:0 auto;
+      padding:22px 16px 30px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 60%,#2f9a8f 100%);
+      color:#fff;
+      border-radius:28px;
+      padding:24px;
+      box-shadow:0 24px 56px rgba(18,58,114,.22);
+      margin-bottom:18px;
+    }
+
+    .hero h1{
+      margin:0 0 8px;
+      font-size:34px;
+      font-weight:900;
+    }
+
+    .hero p{
+      margin:0;
+      color:rgba(255,255,255,.86);
+      line-height:1.7;
+      max-width:820px;
+      font-size:14px;
+    }
+
+    .summary-strip{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .sum-card{
+      background:rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .sum-label{
+      font-size:11px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:800;
+      color:rgba(255,255,255,.78);
+      margin-bottom:8px;
+    }
+
+    .sum-value{
+      font-size:24px;
+      font-weight:900;
+      color:#fff;
+      line-height:1.1;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow-lg);
+      padding:18px;
+      margin-bottom:16px;
+      border:1px solid #eef3f9;
+    }
+
+    h2{
+      margin:0 0 14px;
+      font-size:22px;
+      font-weight:900;
+      color:#102544;
+    }
+
+    .sub{
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.6;
+      margin-top:-6px;
+      margin-bottom:12px;
+    }
+
+    .grid{display:grid;gap:12px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+
+    label{
+      display:block;
+      font-size:12px;
+      font-weight:800;
+      margin-bottom:7px;
+      color:#334155;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    input,select,button{
+      width:100%;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      font-size:14px;
+      font-family:inherit;
+      background:#fff;
+    }
+
+    button{
+      border:none;
+      cursor:pointer;
+      font-weight:800;
+      background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+      color:#fff;
+      box-shadow:0 12px 22px rgba(18,58,114,.18);
+    }
+
+    button.secondary{
+      background:linear-gradient(180deg,#fff 0%,#edf3fb 100%);
+      color:#18324f;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow-sm);
+    }
+
+    .inline-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .inline-actions button{
+      width:auto;
+    }
+
+    .status{
+      margin-top:10px;
+      font-weight:800;
+      color:#153b68;
+      line-height:1.6;
+      white-space:pre-wrap;
+    }
+
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:#fff;
+      box-shadow:var(--shadow-sm);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:1000px;
+      font-size:14px;
+    }
+
+    th,td{
+      padding:11px 12px;
+      border-bottom:1px solid #e2e8f0;
+      vertical-align:top;
+      text-align:left;
+      line-height:1.5;
+    }
+
+    th{
+      background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+      color:#fff;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .badge-status{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 11px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      border:1px solid transparent;
+      white-space:nowrap;
+    }
+
+    .st-draft{background:#fff8ea;color:#9a6100;border-color:#f2cf83}
+    .st-menunggu{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .st-revisi{background:#fff1f2;color:#b91c1c;border-color:#fecdd3}
+    .st-ok{background:#ecfdf5;color:#0f766e;border-color:#bbf7d0}
+    .st-belum{background:#fff1f2;color:#b91c1c;border-color:#fecdd3}
+    .st-default{background:#f8fafc;color:#475569;border-color:#e2e8f0}
+
+    .btn-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:auto;
+      min-width:68px;
+      padding:9px 12px;
+      border-radius:12px;
+      font-size:13px;
+      font-weight:800;
+      border:none;
+      cursor:pointer;
+      background:linear-gradient(180deg,#fff 0%,#edf3fb 100%);
+      color:#16324f;
+      border:1px solid var(--line);
+      text-decoration:none;
+      box-shadow:var(--shadow-sm);
+    }
+
+    .btn-link.disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      pointer-events:none;
+      filter:grayscale(.1);
+    }
+
+    .pagination-wrap{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .pagination-info{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .pagination{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .page-btn{
+      min-width:42px;
+      width:auto;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:#18324f;
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:var(--shadow-sm);
+    }
+
+    .page-btn.active{
+      background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+      color:#fff;
+      border-color:transparent;
+    }
+
+    .page-btn:disabled{
+      opacity:.5;
+      cursor:not-allowed;
+    }
+
+    #dashboardBody td:nth-child(1){min-width:130px;}
+    #dashboardBody td:nth-child(2){min-width:110px;}
+    #dashboardBody td:nth-child(3){min-width:260px;}
+    #dashboardBody td:nth-child(4){min-width:180px;}
+    #dashboardBody td:nth-child(5){min-width:110px;}
+    #dashboardBody td:nth-child(6){min-width:145px;}
+    #dashboardBody td:nth-child(7){min-width:90px;}
+
+    @media (max-width:1100px){
+      .summary-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid-5{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    @media (max-width:800px){
+      .wrap{padding:14px 10px 24px}
+      .hero h1{font-size:28px}
+      .summary-strip,
+      .grid-5,.grid-2{grid-template-columns:1fr}
+      .inline-actions{flex-direction:column}
+      .inline-actions button{width:100%}
+      .pagination-wrap{align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Dashboard Rapor PBJ</h1>
+      <p>Dashboard monitoring untuk melihat perkembangan Rapor PBJ per perangkat daerah, status QC, dan akses cepat ke halaman report.</p>
+
+      <div class="summary-strip">
+        <div class="sum-card">
+          <div class="sum-label">Draft</div>
+          <div class="sum-value" id="sumDraft">0</div>
+        </div>
+        <div class="sum-card">
+          <div class="sum-label">Menunggu</div>
+          <div class="sum-value" id="sumMenunggu">0</div>
+        </div>
+        <div class="sum-card">
+          <div class="sum-label">Revisi</div>
+          <div class="sum-value" id="sumRevisi">0</div>
+        </div>
+        <div class="sum-card">
+          <div class="sum-label">OK</div>
+          <div class="sum-value" id="sumOk">0</div>
+        </div>
+        <div class="sum-card">
+          <div class="sum-label">Total</div>
+          <div class="sum-value" id="sumTotal">0</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Filter Dashboard</h2>
+      <div class="sub">Default tahun otomatis tahun berjalan. Data tampil 10 per halaman.</div>
+
+      <div class="grid grid-5">
+        <div>
+          <label>Tahun</label>
+          <select id="filter_tahun"><option value="">Semua</option></select>
+        </div>
+        <div>
+          <label>Bulan</label>
+          <select id="filter_bulan">
+            <option value="">Semua</option>
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+        </div>
+        <div>
+          <label>OPD</label>
+          <select id="filter_opd"><option value="">Semua</option></select>
+        </div>
+        <div>
+          <label>Status QC</label>
+          <select id="filter_status_qc">
+            <option value="">Semua</option>
+            <option value="Draft">Draft</option>
+            <option value="Menunggu">Menunggu</option>
+            <option value="Revisi">Revisi</option>
+            <option value="OK">OK</option>
+          </select>
+        </div>
+        <div>
+          <label>Maks Data</label>
+          <select id="filter_page_size">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="all">Semua</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:12px;">
+        <div>
+          <label>Kata Kunci</label>
+          <input type="text" id="filter_keyword" placeholder="Cari ID Rapot / OPD / PIC">
+        </div>
+      </div>
+
+      <div class="inline-actions">
+        <button onclick="runDashboard()">Tampilkan</button>
+        <button class="secondary" onclick="resetDashboard()">Reset</button>
+      </div>
+
+      <div id="dashboardStatus" class="status"></div>
+    </div>
+
+    <div class="card">
+      <h2>Daftar Rapor</h2>
+      <div class="sub">Klik Lihat untuk membuka halaman report per rapor. Tombol aktif hanya jika status QC sudah OK.</div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID Rapor</th>
+              <th>Periode</th>
+              <th>Nama OPD</th>
+              <th>Input By</th>
+              <th>Status QC</th>
+              <th>Updated</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="dashboardBody">
+            <tr><td colspan="7">Belum ada data.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-wrap">
+        <div id="paginationInfo" class="pagination-info">0 data tampil</div>
+        <div id="pagination" class="pagination"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CONFIG = {
+      SHEET_ID: '1ccDgtXNATxSYMZuDgd3polvRiTFNiFnjIGMP7b9qmrU',
+      INDEX_SHEET_NAME: 'INDEX_RAPOT',
+      REPORT_PAGE_URL: 'report.html',
+      ENABLE_REPORT_LINK: true
+    };
+
+    const CURRENT_YEAR = new Date().getFullYear();
+
+    const MONTH_MAP = {
+      '1':'Januari','2':'Februari','3':'Maret','4':'April','5':'Mei','6':'Juni',
+      '7':'Juli','8':'Agustus','9':'September','10':'Oktober','11':'November','12':'Desember'
+    };
+
+    let allRows = [];
+    let filteredRows = [];
+    let currentPage = 1;
+
+    function csvUrlBySheetName(sheetId, sheetName) {
+      return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+    }
+
+    function setText(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.innerText = val || '';
+    }
+
+    function escapeHtml(text) {
+      return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function fillSelect(id, items) {
+      const el = document.getElementById(id);
+      const oldVal = el.value;
+      const firstLabel = el.options[0] ? el.options[0].textContent : 'Semua';
+      el.innerHTML = `<option value="">${escapeHtml(firstLabel)}</option>`;
+
+      (items || []).forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v;
+        el.appendChild(opt);
+      });
+
+      const oldExists = [...el.options].some(opt => opt.value === oldVal);
+      if (oldExists) el.value = oldVal;
+    }
+
+    function normalizeStatusKey(status) {
+      const raw = String(status || '').trim().toLowerCase();
+      if (raw === 'draft') return 'draft';
+      if (raw === 'menunggu') return 'menunggu';
+      if (raw === 'revisi') return 'revisi';
+      if (raw === 'ok') return 'ok';
+      if (raw === 'belum') return 'belum';
+      return 'default';
+    }
+
+    function renderStatusBadge(status) {
+      const raw = String(status || '').trim();
+      const cls = normalizeStatusKey(raw);
+      return `<span class="badge-status st-${cls}">${escapeHtml(raw || '-')}</span>`;
+    }
+
+    function canOpenDashboardReport(statusQc) {
+      return String(statusQc || '').trim().toUpperCase() === 'OK';
+    }
+
+    function renderDashboardActionButton(idRapot, statusQc) {
+      if (!CONFIG.ENABLE_REPORT_LINK) {
+        return `<span class="btn-link disabled" title="report.html belum dibuat">Lihat</span>`;
+      }
+
+      if (!canOpenDashboardReport(statusQc)) {
+        return `<span class="btn-link disabled" title="Report hanya bisa dibuka jika status QC sudah OK">Lihat</span>`;
+      }
+
+      const url = `${CONFIG.REPORT_PAGE_URL}?id=${encodeURIComponent(idRapot || '')}`;
+      return `<a class="btn-link" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">Lihat</a>`;
+    }
+
+    function getFilterPayload() {
+      return {
+        tahun: document.getElementById('filter_tahun').value,
+        bulan: document.getElementById('filter_bulan').value,
+        nama_opd: document.getElementById('filter_opd').value,
+        status_qc: document.getElementById('filter_status_qc').value,
+        keyword: document.getElementById('filter_keyword').value.trim().toLowerCase(),
+        page_size: document.getElementById('filter_page_size').value
+      };
+    }
+
+    function renderRows(rows) {
+      const tbody = document.getElementById('dashboardBody');
+      tbody.innerHTML = '';
+
+      if (!rows || !rows.length) {
+        tbody.innerHTML = '<tr><td colspan="7">Data tidak ditemukan.</td></tr>';
+        return;
+      }
+
+      rows.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(row.id_rapot || '-')}</td>
+          <td>${escapeHtml((MONTH_MAP[String(row.bulan)] || row.bulan || '-') + ' ' + (row.tahun || '-'))}</td>
+          <td>${escapeHtml(row.nama_opd || '-')}</td>
+          <td>${escapeHtml(row.input_by || '-')}</td>
+          <td>${renderStatusBadge(row.status_qc || '-')}</td>
+          <td>${escapeHtml(row.updated_at || '-')}</td>
+          <td>${renderDashboardActionButton(row.id_rapot, row.status_qc)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function setSummary(rows) {
+      const summary = { draft: 0, menunggu: 0, revisi: 0, ok: 0, total: rows.length };
+
+      rows.forEach(row => {
+        const key = normalizeStatusKey(row.status_qc);
+        if (key === 'draft') summary.draft++;
+        else if (key === 'menunggu') summary.menunggu++;
+        else if (key === 'revisi') summary.revisi++;
+        else if (key === 'ok') summary.ok++;
+      });
+
+      setText('sumDraft', String(summary.draft));
+      setText('sumMenunggu', String(summary.menunggu));
+      setText('sumRevisi', String(summary.revisi));
+      setText('sumOk', String(summary.ok));
+      setText('sumTotal', String(summary.total));
+    }
+
+    function buildFilterOptions(rows) {
+      const years = [...new Set(rows.map(r => String(r.tahun || '')).filter(Boolean))]
+        .sort((a, b) => Number(b) - Number(a));
+
+      const opds = [...new Set(rows.map(r => String(r.nama_opd || '')).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, 'id'));
+
+      fillSelect('filter_tahun', years);
+      fillSelect('filter_opd', opds);
+
+      const yearNow = String(CURRENT_YEAR);
+      const yearExists = [...document.getElementById('filter_tahun').options].some(opt => opt.value === yearNow);
+      if (yearExists) {
+        document.getElementById('filter_tahun').value = yearNow;
+      }
+    }
+
+    function mapCsvRow(row) {
+      return {
+        id_rapot: String(row.id_rapot || '').trim(),
+        tahun: String(row.tahun || '').trim(),
+        bulan: String(row.bulan || '').trim(),
+        kode_opd: String(row.kode_opd || '').trim(),
+        nama_opd: String(row.nama_opd || '').trim(),
+        input_by: String(row.input_by || '').trim(),
+        created_at: String(row.created_at || '').trim(),
+        updated_at: String(row.updated_at || '').trim(),
+        status_qc: String(row.status_qc || '').trim(),
+        status_pimpinan: String(row.status_pimpinan || '').trim(),
+        qc_by: String(row.qc_by || '').trim(),
+        qc_at: String(row.qc_at || '').trim(),
+        qc_notes: String(row.qc_notes || '').trim()
+      };
+    }
+
+    function renderPagination(totalRows, pageSize) {
+      const wrap = document.getElementById('pagination');
+      const info = document.getElementById('paginationInfo');
+      wrap.innerHTML = '';
+
+      if (pageSize === 'all') {
+        info.innerText = `${totalRows} data tampil`;
+        return;
+      }
+
+      const size = Number(pageSize || 10);
+      const totalPages = Math.max(1, Math.ceil(totalRows / size));
+
+      const start = totalRows === 0 ? 0 : ((currentPage - 1) * size) + 1;
+      const end = Math.min(currentPage * size, totalRows);
+
+      info.innerText = `${start}-${end} dari ${totalRows} data • Page ${currentPage} / ${totalPages}`;
+
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'page-btn';
+      prevBtn.textContent = 'Prev';
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.onclick = function() {
+        if (currentPage > 1) {
+          currentPage--;
+          updateTableOnly();
+        }
+      };
+      wrap.appendChild(prevBtn);
+
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, currentPage + 2);
+
+      if (currentPage <= 3) {
+        endPage = Math.min(totalPages, 5);
+      }
+      if (currentPage >= totalPages - 2) {
+        startPage = Math.max(1, totalPages - 4);
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'page-btn' + (i === currentPage ? ' active' : '');
+        btn.textContent = i;
+        btn.onclick = function() {
+          currentPage = i;
+          updateTableOnly();
+        };
+        wrap.appendChild(btn);
+      }
+
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'page-btn';
+      nextBtn.textContent = 'Next';
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.onclick = function() {
+        if (currentPage < totalPages) {
+          currentPage++;
+          updateTableOnly();
+        }
+      };
+      wrap.appendChild(nextBtn);
+    }
+
+    function updateTableOnly() {
+      const pageSize = document.getElementById('filter_page_size').value;
+
+      let rowsToRender = filteredRows;
+
+      if (pageSize !== 'all') {
+        const size = Number(pageSize || 10);
+        const totalPages = Math.max(1, Math.ceil(filteredRows.length / size));
+        if (currentPage > totalPages) currentPage = totalPages;
+
+        const startIndex = (currentPage - 1) * size;
+        const endIndex = startIndex + size;
+        rowsToRender = filteredRows.slice(startIndex, endIndex);
+      }
+
+      renderRows(rowsToRender);
+      renderPagination(filteredRows.length, pageSize);
+      setText('dashboardStatus', `${rowsToRender.length} data tampil.`);
+    }
+
+    function runDashboard() {
+      const payload = getFilterPayload();
+      currentPage = 1;
+
+      filteredRows = allRows.filter(row => {
+        if (payload.tahun && String(row.tahun) !== String(payload.tahun)) return false;
+        if (payload.bulan && String(row.bulan) !== String(payload.bulan)) return false;
+        if (payload.nama_opd && String(row.nama_opd) !== String(payload.nama_opd)) return false;
+        if (payload.status_qc && String(row.status_qc) !== String(payload.status_qc)) return false;
+
+        if (payload.keyword) {
+          const haystack = [
+            row.id_rapot,
+            row.nama_opd,
+            row.input_by,
+            row.tahun,
+            row.bulan
+          ].join(' ').toLowerCase();
+
+          if (!haystack.includes(payload.keyword)) return false;
+        }
+
+        return true;
+      });
+
+      filteredRows.sort((a, b) => {
+        const y = Number(b.tahun || 0) - Number(a.tahun || 0);
+        if (y !== 0) return y;
+
+        const m = Number(b.bulan || 0) - Number(a.bulan || 0);
+        if (m !== 0) return m;
+
+        return String(a.nama_opd || '').localeCompare(String(b.nama_opd || ''), 'id');
+      });
+
+      setSummary(filteredRows);
+      updateTableOnly();
+    }
+
+    function resetDashboard() {
+      document.getElementById('filter_bulan').value = '';
+      document.getElementById('filter_opd').value = '';
+      document.getElementById('filter_status_qc').value = '';
+      document.getElementById('filter_keyword').value = '';
+      document.getElementById('filter_page_size').value = '10';
+
+      const yearNow = String(CURRENT_YEAR);
+      const yearExists = [...document.getElementById('filter_tahun').options].some(opt => opt.value === yearNow);
+      document.getElementById('filter_tahun').value = yearExists ? yearNow : '';
+
+      runDashboard();
+    }
+
+    function loadDashboardData() {
+      setText('dashboardStatus', 'Memuat data dashboard...');
+
+      Papa.parse(csvUrlBySheetName(CONFIG.SHEET_ID, CONFIG.INDEX_SHEET_NAME), {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          const rows = (results.data || [])
+            .map(mapCsvRow)
+            .filter(row => row.id_rapot);
+
+          allRows = rows;
+          buildFilterOptions(allRows);
+          runDashboard();
+        },
+        error: function(err) {
+          console.error(err);
+          setText('dashboardStatus', 'Gagal memuat data dashboard. Pastikan sheet publik bisa diakses umum.');
+          renderRows([]);
+          setSummary([]);
+          document.getElementById('pagination').innerHTML = '';
+          document.getElementById('paginationInfo').innerText = '0 data tampil';
+        }
+      });
+    }
+
+    loadDashboardData();
+  </script>
+</body>
+</html>
