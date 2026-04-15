@@ -35,7 +35,7 @@
     }
 
     .wrap{
-      max-width:1600px;
+      max-width:1680px;
       margin:0 auto;
       padding:22px 16px 30px;
     }
@@ -187,7 +187,7 @@
     table{
       width:100%;
       border-collapse:collapse;
-      min-width:1750px;
+      min-width:2100px;
       font-size:14px;
     }
 
@@ -223,11 +223,11 @@
       white-space:nowrap;
     }
 
-    .st-belum{background:#fff1f2;color:#b91c1c;border-color:#fecdd3}
+    .st-belum{background:#eef6ff;color:#1d4ed8;border-color:#bfdbfe}
+    .st-warning{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
     .st-berjalan{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
     .st-sesuai{background:#ecfdf5;color:#0f766e;border-color:#bbf7d0}
-    .st-over{background:#fff8ea;color:#9a6100;border-color:#f2cf83}
-    .st-warning{background:#fff7ed;color:#c2410c;border-color:#fed7aa}
+    .st-over{background:#fff1f2;color:#b91c1c;border-color:#fecdd3}
     .st-default{background:#f8fafc;color:#475569;border-color:#e2e8f0}
 
     .warn{
@@ -240,6 +240,34 @@
       border-radius:12px;
       line-height:1.4;
       display:inline-block;
+    }
+
+    .rup-link{
+      color:#123a72;
+      font-weight:900;
+      text-decoration:none;
+      cursor:pointer;
+    }
+
+    .rup-link:hover{
+      text-decoration:underline;
+    }
+
+    .detail-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:auto;
+      min-width:72px;
+      padding:8px 12px;
+      border-radius:12px;
+      font-size:13px;
+      font-weight:800;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,#fff 0%,#edf3fb 100%);
+      color:#16324f;
+      cursor:pointer;
+      box-shadow:var(--shadow-sm);
     }
 
     .pagination-wrap{
@@ -287,15 +315,110 @@
       cursor:not-allowed;
     }
 
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:9999;
+    }
+
+    .modal.show{
+      display:flex;
+    }
+
+    .modal-box{
+      width:min(1280px, 100%);
+      max-height:90vh;
+      overflow:auto;
+      background:#fff;
+      border-radius:24px;
+      box-shadow:0 30px 80px rgba(15,23,42,.28);
+      border:1px solid #e5edf7;
+    }
+
+    .modal-head{
+      padding:18px 20px;
+      background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      border-radius:24px 24px 0 0;
+    }
+
+    .modal-title{
+      font-size:22px;
+      font-weight:900;
+      margin:0;
+    }
+
+    .modal-close{
+      width:auto;
+      min-width:90px;
+      background:rgba(255,255,255,.18);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:none;
+    }
+
+    .modal-body{
+      padding:18px 20px 22px;
+    }
+
+    .meta-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .meta-box{
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .meta-label{
+      font-size:11px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:800;
+      color:#64748b;
+      margin-bottom:8px;
+    }
+
+    .meta-value{
+      font-size:18px;
+      font-weight:900;
+      color:#122033;
+      word-break:break-word;
+    }
+
+    .empty-box{
+      background:#f8fafc;
+      border:1px solid #e2e8f0;
+      border-radius:16px;
+      padding:16px;
+      color:#475569;
+      font-weight:700;
+    }
+
     @media (max-width:1200px){
       .summary-strip{grid-template-columns:repeat(3,minmax(0,1fr))}
       .grid-6{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .meta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:800px){
       .wrap{padding:14px 10px 24px}
       .hero h1{font-size:28px}
-      .summary-strip,.grid-6,.grid-2{grid-template-columns:1fr}
+      .summary-strip,.grid-6,.grid-2,.meta-grid{grid-template-columns:1fr}
       .inline-actions{flex-direction:column}
       .inline-actions button{width:100%}
       .pagination-wrap{align-items:flex-start}
@@ -306,7 +429,7 @@
   <div class="wrap">
     <div class="hero">
       <h1>Monitoring RUP vs Realisasi</h1>
-      <p>Pelacakan paket per Kode RUP dari data PERENCANAAN dan REALISASI. Monitoring ini menampilkan progres transaksi, total realisasi terhadap pagu, status progres, dan warning keterlambatan berdasarkan Waktu Pemilihan.</p>
+      <p>Basis tabel utama adalah data PERENCANAAN. Kode RUP dilacak ke sheet REALISASI. Jika belum ada realisasi dan bulan Waktu Pemilihan sudah lewat dari bulan sekarang, status menjadi <b>Melewati Waktu Pemilihan</b>. Jika belum lewat, status menjadi <b>Belum Berjalan</b>.</p>
 
       <div class="summary-strip">
         <div class="sum-card">
@@ -316,6 +439,10 @@
         <div class="sum-card">
           <div class="sum-label">Belum Berjalan</div>
           <div class="sum-value" id="sumBelum">0</div>
+        </div>
+        <div class="sum-card">
+          <div class="sum-label">Melewati Waktu</div>
+          <div class="sum-value" id="sumWarning">0</div>
         </div>
         <div class="sum-card">
           <div class="sum-label">Berjalan</div>
@@ -329,21 +456,21 @@
           <div class="sum-label">Melebihi Pagu</div>
           <div class="sum-value" id="sumOver">0</div>
         </div>
-        <div class="sum-card">
-          <div class="sum-label">Warning</div>
-          <div class="sum-value" id="sumWarning">0</div>
-        </div>
       </div>
     </div>
 
     <div class="card">
       <h2>Filter Monitoring</h2>
-      <div class="sub">Sumber data dibaca langsung dari file <b>inaproc-monitoring.xlsx</b> yang ada di repo GitHub. Data tampil 10 per halaman.</div>
+      <div class="sub">Sumber data dibaca langsung dari file <b>inaproc-monitoring.xlsx</b> di repo GitHub. Tabel utama menampilkan data PERENCANAAN, lalu detail REALISASI muncul saat klik Kode RUP atau tombol Detail.</div>
 
       <div class="grid grid-6">
         <div>
           <label>Satuan Kerja</label>
           <select id="filter_satker"><option value="">Semua</option></select>
+        </div>
+        <div>
+          <label>Cara Pengadaan</label>
+          <select id="filter_cara"><option value="">Semua</option></select>
         </div>
         <div>
           <label>Metode Pengadaan</label>
@@ -358,6 +485,7 @@
           <select id="filter_status">
             <option value="">Semua</option>
             <option value="Belum Berjalan">Belum Berjalan</option>
+            <option value="Melewati Waktu Pemilihan">Melewati Waktu Pemilihan</option>
             <option value="Berjalan">Berjalan</option>
             <option value="Sesuai Pagu">Sesuai Pagu</option>
             <option value="Melebihi Pagu">Melebihi Pagu</option>
@@ -367,15 +495,6 @@
           <label>Waktu Pemilihan</label>
           <select id="filter_waktu"><option value="">Semua</option></select>
         </div>
-        <div>
-          <label>Maks Data</label>
-          <select id="filter_page_size">
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="all">Semua</option>
-          </select>
-        </div>
       </div>
 
       <div class="grid grid-2" style="margin-top:12px;">
@@ -384,11 +503,12 @@
           <input type="text" id="filter_koderup" placeholder="Cari Kode RUP / Nama Paket / Satuan Kerja">
         </div>
         <div>
-          <label>Warning Keterlambatan</label>
-          <select id="filter_warning">
-            <option value="">Semua</option>
-            <option value="Ya">Hanya Warning</option>
-            <option value="Tidak">Tanpa Warning</option>
+          <label>Maks Data</label>
+          <select id="filter_page_size">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="all">Semua</option>
           </select>
         </div>
       </div>
@@ -403,7 +523,7 @@
 
     <div class="card">
       <h2>Daftar Monitoring Kode RUP</h2>
-      <div class="sub">Satu baris mewakili satu Kode RUP. Nilai realisasi dihitung dari seluruh transaksi di sheet REALISASI yang memiliki Kode RUP sama.</div>
+      <div class="sub">Satu baris mewakili satu Kode RUP dari PERENCANAAN. Klik Kode RUP atau tombol Detail untuk melihat semua paket/transaksi REALISASI yang cocok.</div>
 
       <div class="table-wrap">
         <table>
@@ -412,21 +532,22 @@
               <th>Kode RUP</th>
               <th>Nama Paket</th>
               <th>Satuan Kerja</th>
+              <th>Cara</th>
               <th>Jenis</th>
               <th>Metode</th>
               <th>Waktu Pemilihan</th>
               <th>Pagu RUP</th>
-              <th>Jml Transaksi</th>
+              <th>Jml Paket Realisasi</th>
               <th>Total Realisasi</th>
               <th>Sisa Pagu</th>
               <th>% Realisasi</th>
               <th>Status Progres</th>
-              <th>Status Paket Realisasi</th>
               <th>Warning</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody id="monitoringBody">
-            <tr><td colspan="14">Belum ada data.</td></tr>
+            <tr><td colspan="15">Belum ada data.</td></tr>
           </tbody>
         </table>
       </div>
@@ -434,6 +555,75 @@
       <div class="pagination-wrap">
         <div id="paginationInfo" class="pagination-info">0 data tampil</div>
         <div id="pagination" class="pagination"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="detailModal" class="modal" onclick="handleModalBackdrop(event)">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3 class="modal-title" id="detailTitle">Detail Kode RUP</h3>
+        <button class="modal-close" onclick="closeDetailModal()">Tutup</button>
+      </div>
+      <div class="modal-body">
+        <div class="meta-grid">
+          <div class="meta-box">
+            <div class="meta-label">Kode RUP</div>
+            <div class="meta-value" id="detailKodeRup">-</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-label">Nama Paket</div>
+            <div class="meta-value" id="detailNamaPaket">-</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-label">Satuan Kerja</div>
+            <div class="meta-value" id="detailSatker">-</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-label">Status Progres</div>
+            <div class="meta-value" id="detailStatus">-</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-label">Cara Pengadaan</div>
+            <div class="meta-value" id="detailCara">-</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-label">Metode Pengadaan</div>
+            <div class="meta-value" id="detailMetode">-</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-label">Waktu Pemilihan</div>
+            <div class="meta-value" id="detailWaktu">-</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-label">Pagu / Realisasi</div>
+            <div class="meta-value" id="detailPaguVsRealisasi">-</div>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Kode Paket</th>
+                <th>Nama Paket Realisasi</th>
+                <th>Nama Penyedia</th>
+                <th>Satuan Kerja</th>
+                <th>Metode</th>
+                <th>Status Paket</th>
+                <th>Sumber Transaksi</th>
+                <th>Nilai Realisasi</th>
+              </tr>
+            </thead>
+            <tbody id="detailBody">
+              <tr><td colspan="8">Belum ada data.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="detailEmpty" class="empty-box" style="display:none; margin-top:16px;">
+          Belum ada paket realisasi yang cocok dengan Kode RUP ini.
+        </div>
       </div>
     </div>
   </div>
@@ -448,6 +638,7 @@
     let allRows = [];
     let filteredRows = [];
     let currentPage = 1;
+    let groupedRealByKode = {};
 
     function setText(id, val) {
       const el = document.getElementById(id);
@@ -503,16 +694,16 @@
     }
 
     function excelDateToJSDate(value) {
-      if (value instanceof Date) return value;
+      if (value instanceof Date) return new Date(value.getFullYear(), value.getMonth(), 1);
       if (typeof value === 'number') {
         const utc_days = Math.floor(value - 25569);
         const utc_value = utc_days * 86400;
         const date_info = new Date(utc_value * 1000);
-        return new Date(date_info.getFullYear(), date_info.getMonth(), date_info.getDate());
+        return new Date(date_info.getFullYear(), date_info.getMonth(), 1);
       }
       if (typeof value === 'string' && value.trim()) {
         const d = new Date(value);
-        if (!isNaN(d.getTime())) return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+        if (!isNaN(d.getTime())) return new Date(d.getFullYear(), d.getMonth(), 1);
       }
       return null;
     }
@@ -546,6 +737,7 @@
     function buildStatusBadge(status) {
       const map = {
         'Belum Berjalan': 'st-belum',
+        'Melewati Waktu Pemilihan': 'st-warning',
         'Berjalan': 'st-berjalan',
         'Sesuai Pagu': 'st-sesuai',
         'Melebihi Pagu': 'st-over'
@@ -554,53 +746,81 @@
       return `<span class="badge ${cls}">${escapeHtml(status || '-')}</span>`;
     }
 
-    function monthsLate(fromDate, toDate) {
+    function monthDiff(fromDate, toDate) {
       if (!fromDate || !toDate) return 0;
       return (toDate.getFullYear() - fromDate.getFullYear()) * 12 + (toDate.getMonth() - fromDate.getMonth());
+    }
+
+    function groupRealisasi(realRows) {
+      const grouped = {};
+
+      realRows.forEach(r => {
+        const kode = String(r.kode_rup || '').trim();
+        if (!kode) return;
+
+        if (!grouped[kode]) {
+          grouped[kode] = {
+            transaksi: 0,
+            total_realisasi: 0,
+            statuses: [],
+            rows: []
+          };
+        }
+
+        grouped[kode].transaksi += 1;
+        grouped[kode].total_realisasi += parseMoney(r.nilai_realisasi);
+        if (String(r.status_paket || '').trim()) {
+          grouped[kode].statuses.push(String(r.status_paket || '').trim());
+        }
+
+        grouped[kode].rows.push({
+          kode_paket: String(r.kode_paket || '').trim(),
+          nama_paket: String(r.nama_paket || '').trim(),
+          nama_penyedia: String(r.nama_penyedia || '').trim(),
+          satuan_kerja: String(r.nama_satuan_kerja || '').trim(),
+          metode_pengadaan: String(r.metode_pengadaan || '').trim(),
+          status_paket: String(r.status_paket || '').trim(),
+          sumber_transaksi: String(r.sumber_transaksi || '').trim(),
+          nilai_realisasi: parseMoney(r.nilai_realisasi)
+        });
+      });
+
+      return grouped;
     }
 
     function buildMonitoringData(perencanaanRows, realisasiRows) {
       const planRows = normalizeRows(perencanaanRows);
       const realRows = normalizeRows(realisasiRows);
 
-      const groupedReal = {};
+      groupedRealByKode = groupRealisasi(realRows);
 
-      realRows.forEach(r => {
-        const kode = String(r.kode_rup || '').trim();
-        if (!kode) return;
-
-        if (!groupedReal[kode]) {
-          groupedReal[kode] = {
-            transaksi: 0,
-            total_realisasi: 0,
-            statuses: []
-          };
-        }
-
-        groupedReal[kode].transaksi += 1;
-        groupedReal[kode].total_realisasi += parseMoney(r.nilai_realisasi);
-        if (String(r.status_paket || '').trim()) {
-          groupedReal[kode].statuses.push(String(r.status_paket || '').trim());
-        }
-      });
-
-      const today = new Date();
-      const thisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+      const now = new Date();
+      const bulanSekarang = new Date(now.getFullYear(), now.getMonth(), 1);
 
       return planRows
         .filter(r => String(r.kode_rup || '').trim())
         .map(r => {
           const kodeRup = String(r.kode_rup || '').trim();
           const pagu = parseMoney(r.nilai_pagu);
-          const real = groupedReal[kodeRup] || { transaksi: 0, total_realisasi: 0, statuses: [] };
+          const real = groupedRealByKode[kodeRup] || { transaksi: 0, total_realisasi: 0, statuses: [], rows: [] };
           const totalRealisasi = Number(real.total_realisasi || 0);
           const transaksi = Number(real.transaksi || 0);
           const sisaPagu = pagu - totalRealisasi;
           const persen = pagu > 0 ? (totalRealisasi / pagu) * 100 : 0;
 
+          const waktuDate = excelDateToJSDate(r.waktu_pemilihan);
+          const selisihBulan = waktuDate ? monthDiff(waktuDate, bulanSekarang) : 0;
+
           let statusProgres = 'Belum Berjalan';
+          let warningText = '';
+
           if (transaksi === 0 || totalRealisasi === 0) {
-            statusProgres = 'Belum Berjalan';
+            if (waktuDate && selisihBulan > 0) {
+              statusProgres = 'Melewati Waktu Pemilihan';
+              warningText = 'Belum ada realisasi dan sudah melewati waktu pemilihan ' + selisihBulan + ' bulan.';
+            } else {
+              statusProgres = 'Belum Berjalan';
+            }
           } else if (totalRealisasi > pagu) {
             statusProgres = 'Melebihi Pagu';
           } else if (Math.abs(totalRealisasi - pagu) < 1 || persen >= 99.99) {
@@ -608,16 +828,6 @@
           } else {
             statusProgres = 'Berjalan';
           }
-
-          const waktuDate = excelDateToJSDate(r.waktu_pemilihan);
-          const bulanTerlambat = waktuDate ? monthsLate(waktuDate, thisMonth) : 0;
-
-          let warningText = '';
-          if (waktuDate && bulanTerlambat > 0 && transaksi === 0) {
-            warningText = 'Sudah melewati waktu pemilihan ' + bulanTerlambat + ' bulan, belum ada realisasi.';
-          }
-
-          const statusList = [...new Set(real.statuses)].filter(Boolean);
 
           return {
             kode_rup: kodeRup,
@@ -634,7 +844,6 @@
             sisa_pagu: sisaPagu,
             persentase: persen,
             status_progres: statusProgres,
-            status_paket_realisasi: statusList.join(', ') || '-',
             warning_text: warningText,
             has_warning: !!warningText
           };
@@ -659,21 +868,86 @@
     }
 
     function buildFilterOptions(rows) {
-      fillSelect('filter_satker',
+      fillSelect(
+        'filter_satker',
         [...new Set(rows.map(r => r.satuan_kerja).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'id'))
       );
 
-      fillSelect('filter_metode',
+      fillSelect(
+        'filter_cara',
+        [...new Set(rows.map(r => r.cara_pengadaan).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'id'))
+      );
+
+      fillSelect(
+        'filter_metode',
         [...new Set(rows.map(r => r.metode_pengadaan).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'id'))
       );
 
-      fillSelect('filter_jenis',
+      fillSelect(
+        'filter_jenis',
         [...new Set(rows.map(r => r.jenis_pengadaan).filter(Boolean))].sort((a,b) => a.localeCompare(b, 'id'))
       );
 
-      fillSelect('filter_waktu',
+      fillSelect(
+        'filter_waktu',
         [...new Set(rows.map(r => r.waktu_pemilihan_label).filter(v => v && v !== '-'))]
+          .sort((a,b) => a.localeCompare(b, 'id'))
       );
+    }
+
+    function openDetailModal(kodeRup) {
+      const row = allRows.find(r => String(r.kode_rup) === String(kodeRup));
+      if (!row) return;
+
+      const real = groupedRealByKode[String(kodeRup)] || { rows: [] };
+      const detailRows = real.rows || [];
+
+      setText('detailTitle', 'Detail Kode RUP ' + row.kode_rup);
+      setText('detailKodeRup', row.kode_rup || '-');
+      setText('detailNamaPaket', row.nama_paket || '-');
+      setText('detailSatker', row.satuan_kerja || '-');
+      setText('detailStatus', row.status_progres || '-');
+      setText('detailCara', row.cara_pengadaan || '-');
+      setText('detailMetode', row.metode_pengadaan || '-');
+      setText('detailWaktu', row.waktu_pemilihan_label || '-');
+      setText('detailPaguVsRealisasi', formatMoney(row.pagu) + ' / ' + formatMoney(row.total_realisasi) + ' (' + formatPercent(row.persentase) + ')');
+
+      const tbody = document.getElementById('detailBody');
+      const empty = document.getElementById('detailEmpty');
+      tbody.innerHTML = '';
+
+      if (!detailRows.length) {
+        empty.style.display = 'block';
+        tbody.innerHTML = '<tr><td colspan="8">Belum ada data realisasi.</td></tr>';
+      } else {
+        empty.style.display = 'none';
+        detailRows.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${escapeHtml(item.kode_paket || '-')}</td>
+            <td>${escapeHtml(item.nama_paket || '-')}</td>
+            <td>${escapeHtml(item.nama_penyedia || '-')}</td>
+            <td>${escapeHtml(item.satuan_kerja || '-')}</td>
+            <td>${escapeHtml(item.metode_pengadaan || '-')}</td>
+            <td>${escapeHtml(item.status_paket || '-')}</td>
+            <td>${escapeHtml(item.sumber_transaksi || '-')}</td>
+            <td class="right">${formatMoney(item.nilai_realisasi)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('detailModal').classList.add('show');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detailModal').classList.remove('show');
+    }
+
+    function handleModalBackdrop(event) {
+      if (event.target && event.target.id === 'detailModal') {
+        closeDetailModal();
+      }
     }
 
     function renderRows(rows) {
@@ -681,16 +955,23 @@
       tbody.innerHTML = '';
 
       if (!rows || !rows.length) {
-        tbody.innerHTML = '<tr><td colspan="14">Data tidak ditemukan.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="15">Data tidak ditemukan.</td></tr>';
         return;
       }
 
       rows.forEach(row => {
+        const warningCell = row.has_warning
+          ? `<span class="warn">${escapeHtml(row.warning_text)}</span>`
+          : '-';
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td class="bold">${escapeHtml(row.kode_rup)}</td>
+          <td class="bold">
+            <a class="rup-link" href="javascript:void(0)" onclick="openDetailModal('${escapeHtml(row.kode_rup)}')">${escapeHtml(row.kode_rup)}</a>
+          </td>
           <td>${escapeHtml(row.nama_paket || '-')}</td>
           <td>${escapeHtml(row.satuan_kerja || '-')}</td>
+          <td>${escapeHtml(row.cara_pengadaan || '-')}</td>
           <td>${escapeHtml(row.jenis_pengadaan || '-')}</td>
           <td>${escapeHtml(row.metode_pengadaan || '-')}</td>
           <td>${escapeHtml(row.waktu_pemilihan_label || '-')}</td>
@@ -700,8 +981,8 @@
           <td class="right">${formatMoney(row.sisa_pagu)}</td>
           <td class="right">${formatPercent(row.persentase)}</td>
           <td>${buildStatusBadge(row.status_progres)}</td>
-          <td>${escapeHtml(row.status_paket_realisasi || '-')}</td>
-          <td>${row.has_warning ? `<span class="warn">${escapeHtml(row.warning_text)}</span>` : '-'}</td>
+          <td>${warningCell}</td>
+          <td><button class="detail-btn" onclick="openDetailModal('${escapeHtml(row.kode_rup)}')">Detail</button></td>
         `;
         tbody.appendChild(tr);
       });
@@ -711,27 +992,26 @@
       const summary = {
         total: rows.length,
         belum: 0,
+        warning: 0,
         berjalan: 0,
         sesuai: 0,
-        over: 0,
-        warning: 0
+        over: 0
       };
 
       rows.forEach(row => {
         if (row.status_progres === 'Belum Berjalan') summary.belum++;
+        else if (row.status_progres === 'Melewati Waktu Pemilihan') summary.warning++;
         else if (row.status_progres === 'Berjalan') summary.berjalan++;
         else if (row.status_progres === 'Sesuai Pagu') summary.sesuai++;
         else if (row.status_progres === 'Melebihi Pagu') summary.over++;
-
-        if (row.has_warning) summary.warning++;
       });
 
       setText('sumTotalRup', String(summary.total));
       setText('sumBelum', String(summary.belum));
+      setText('sumWarning', String(summary.warning));
       setText('sumBerjalan', String(summary.berjalan));
       setText('sumSesuai', String(summary.sesuai));
       setText('sumOver', String(summary.over));
-      setText('sumWarning', String(summary.warning));
     }
 
     function renderPagination(totalRows, pageSize) {
@@ -815,30 +1095,30 @@
 
     function runMonitoring() {
       const satker = document.getElementById('filter_satker').value;
+      const cara = document.getElementById('filter_cara').value;
       const metode = document.getElementById('filter_metode').value;
       const jenis = document.getElementById('filter_jenis').value;
       const status = document.getElementById('filter_status').value;
       const waktu = document.getElementById('filter_waktu').value;
       const keyword = document.getElementById('filter_koderup').value.trim().toLowerCase();
-      const warning = document.getElementById('filter_warning').value;
+      const pageSize = document.getElementById('filter_page_size').value;
 
       currentPage = 1;
 
       filteredRows = allRows.filter(row => {
         if (satker && row.satuan_kerja !== satker) return false;
+        if (cara && row.cara_pengadaan !== cara) return false;
         if (metode && row.metode_pengadaan !== metode) return false;
         if (jenis && row.jenis_pengadaan !== jenis) return false;
         if (status && row.status_progres !== status) return false;
         if (waktu && row.waktu_pemilihan_label !== waktu) return false;
-
-        if (warning === 'Ya' && !row.has_warning) return false;
-        if (warning === 'Tidak' && row.has_warning) return false;
 
         if (keyword) {
           const haystack = [
             row.kode_rup,
             row.nama_paket,
             row.satuan_kerja,
+            row.cara_pengadaan,
             row.metode_pengadaan,
             row.jenis_pengadaan
           ].join(' ').toLowerCase();
@@ -850,8 +1130,23 @@
       });
 
       filteredRows.sort((a, b) => {
-        if (a.has_warning !== b.has_warning) return a.has_warning ? -1 : 1;
-        if (a.waktu_pemilihan && b.waktu_pemilihan) return a.waktu_pemilihan - b.waktu_pemilihan;
+        const rank = {
+          'Melewati Waktu Pemilihan': 1,
+          'Belum Berjalan': 2,
+          'Berjalan': 3,
+          'Sesuai Pagu': 4,
+          'Melebihi Pagu': 5
+        };
+
+        const ra = rank[a.status_progres] || 99;
+        const rb = rank[b.status_progres] || 99;
+        if (ra !== rb) return ra - rb;
+
+        if (a.waktu_pemilihan && b.waktu_pemilihan) {
+          const diff = a.waktu_pemilihan - b.waktu_pemilihan;
+          if (diff !== 0) return diff;
+        }
+
         return String(a.satuan_kerja || '').localeCompare(String(b.satuan_kerja || ''), 'id');
       });
 
@@ -861,12 +1156,12 @@
 
     function resetMonitoring() {
       document.getElementById('filter_satker').value = '';
+      document.getElementById('filter_cara').value = '';
       document.getElementById('filter_metode').value = '';
       document.getElementById('filter_jenis').value = '';
       document.getElementById('filter_status').value = '';
       document.getElementById('filter_waktu').value = '';
       document.getElementById('filter_koderup').value = '';
-      document.getElementById('filter_warning').value = '';
       document.getElementById('filter_page_size').value = '10';
       runMonitoring();
     }
