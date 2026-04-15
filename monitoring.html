@@ -498,7 +498,7 @@
 <body>
   <div class="wrap">
     <div class="hero">
-      <h1>Monitoring RUP vs Realisasi</h1>
+      <h1>Monitoring</h1>
       <p>Basis tabel utama adalah data PERENCANAAN. Status hanya berisi <b>Berjalan</b> dan <b>Belum Berjalan</b>. Kolom Progres dipakai untuk <b>Sesuai Pagu</b> atau <b>Melebihi Pagu</b>. Kolom Waktu dipakai untuk <b>Melewati</b>, <b>Belum</b>, atau <b>Berjalan</b>.</p>
 
       <div class="summary-strip">
@@ -910,7 +910,7 @@
 
         const nilai = parseMoney(
           r.nilai_realisasi ||
-          r.total_nilai_(rp) ||
+          r['total_nilai_(rp)' ||
           r.total_nilai ||
           r.nilai_transaksi ||
           r.nilai_paket ||
