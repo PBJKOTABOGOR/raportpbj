@@ -1309,20 +1309,28 @@
       });
     }
 
-    function applySort(rows){
-      return [...rows].sort((a,b) => {
-        const oa = getWaktuOrder(a.waktu_pemilihan_label);
-        const ob = getWaktuOrder(b.waktu_pemilihan_label);
+function applySort(rows){
+  return [...rows].sort((a,b) => {
 
-        if (sortWaktuAsc) {
-          if (oa !== ob) return oa - ob;
-        } else {
-          if (oa !== ob) return ob - oa;
-        }
-
-        return String(a.satuan_kerja || '').localeCompare(String(b.satuan_kerja || ''), 'id');
-      });
+    if (activeSort === 'realisasi') {
+      return sortRealisasiAsc 
+        ? a.persentase - b.persentase
+        : b.persentase - a.persentase;
     }
+
+    // default: waktu
+    const oa = getWaktuOrder(a.waktu_pemilihan_label);
+    const ob = getWaktuOrder(b.waktu_pemilihan_label);
+
+    if (sortWaktuAsc) {
+      if (oa !== ob) return oa - ob;
+    } else {
+      if (oa !== ob) return ob - oa;
+    }
+
+    return String(a.satuan_kerja || '').localeCompare(String(b.satuan_kerja || ''), 'id');
+  });
+}
 
     function renderPagination(totalRows, pageSize){
       const wrap = document.getElementById('pagination');
