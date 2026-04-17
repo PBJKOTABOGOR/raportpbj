@@ -1401,6 +1401,13 @@
       setText('monitoringStatus', `${rowsToRender.length} data tampil.`);
     }
 
+    function toggleSortRealisasi(){
+      sortAscRealisasi = !sortAscRealisasi;
+      const arrow = document.getElementById("sortRealisasiArrow");
+      arrow.textContent = sortAscRealisasi ? "↑" : "↓";
+      renderTable();
+    }
+
     function toggleSortWaktu(){
       sortWaktuAsc = !sortWaktuAsc;
       setText('sortWaktuLabel', sortWaktuAsc ? 'Terlama → Terbaru' : 'Terbaru → Terlama');
