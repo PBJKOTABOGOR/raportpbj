@@ -807,6 +807,8 @@
     let filteredRows = [];
     let currentPage = 1;
     let sortWaktuAsc = true;
+    let sortRealisasiAsc = true;
+    let activeSort = 'waktu'; 
     let groupedRealByKode = {};
 
     function setText(id, val){
@@ -1405,7 +1407,7 @@
       sortAscRealisasi = !sortAscRealisasi;
       const arrow = document.getElementById("sortRealisasiArrow");
       arrow.textContent = sortAscRealisasi ? "↑" : "↓";
-      renderTable();
+      runMonitoring();
     }
 
     function toggleSortWaktu(){
